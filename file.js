@@ -143,9 +143,9 @@
 
 let num = 50 
 
-// while (num<= 55) {
-//     console.log(num);
-//     num++;
+while (num<= 55) {
+    console.log(num);
+    num++;
 
 // }
 do {  console.log(num);
@@ -186,3 +186,54 @@ for (let i=1; i < length; i++) {
     result +='\n'
 }
 console.log(result);
+
+
+
+function secondTask() {
+    
+    for (let i=20; i>10; i--){
+        
+    if(i === 13) {
+        break;
+    }
+    console.log (i)
+}
+}
+
+for (let i = 2; i < 10; i++){
+if (i % 2 === 0)
+    console. log (i)
+}
+
+
+
+ for (let i = 2; i <= 16; i++) {
+     if (i % 2 === 0) {
+         continue;
+     } else {
+         console.log(i);
+     }
+ }
+
+let num = 2;
+
+while (num <= 16) {
+    if (num % 2 !== 0) {
+        console.log(num);
+    }
+    num++;
+}
+
+
+
+
+    for (let i = 0; i < arr.length; i++) {
+        result[i] = arr[i];
+    }
+
+    console.log(result);
+    return result;
+}
+
+
+
