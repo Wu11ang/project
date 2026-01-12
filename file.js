@@ -141,99 +141,137 @@
 //    console.log('Done!')
 // }
 
-let num = 50 
+// let num = 50 
 
-while (num<= 55) {
-    console.log(num);
-    num++;
+// while (num<= 55) {
+//     console.log(num);
+//     num++;
+
+// // }
+// do {  console.log(num);
+//     num++;
 
 // }
-do {  console.log(num);
-    num++;
+// while (num<= 55)
 
-}
-while (num<= 55)
+//     let num = 50 
 
-    let num = 50 
+// for (let i=1; i <8; i++) {
+//     console.log(num);
+//     num++;
+// }
 
-for (let i=1; i <8; i++) {
-    console.log(num);
-    num++;
-}
-
-for ( let i =1; i<10; i++ ) {
-    if(i === 6) {
-        // break;
-        continue;
-    }
-    console.log(i);
-}
+// for ( let i =1; i<10; i++ ) {
+//     if(i === 6) {
+//         // break;
+//         continue;
+//     }
+//     console.log(i);
+// }
 
 
-for (let hour = 0; hour <= 3; hour++) {   
-    console.log(hour)   // внешний цикл
-  for (let min = 0; min < 60; min++) {       // внутренний цикл
-    console.log( min);
-  }
-}
+// for (let hour = 0; hour <= 3; hour++) {   
+//     console.log(hour)   // внешний цикл
+//   for (let min = 0; min < 60; min++) {       // внутренний цикл
+//     console.log( min);
+//   }
+// }
 
-let result ='';
-const length =7;
-for (let i=1; i < length; i++) {
-    for (let j = 0; j < i; j++){
-        result +="*"
-    }
-    result +='\n'
-}
-console.log(result);
+// let result ='';
+// const length =7;
+// for (let i=1; i < length; i++) {
+//     for (let j = 0; j < i; j++){
+//         result +="*"
+//     }
+//     result +='\n'
+// }
+// console.log(result);
 
 
 
-function secondTask() {
+// function secondTask() {
     
-    for (let i=20; i>10; i--){
+//     for (let i=20; i>10; i--){
         
-    if(i === 13) {
-        break;
-    }
-    console.log (i)
-}
-}
+//     if(i === 13) {
+//         break;
+//     }
+//     console.log (i)
+// }
+// }
 
-for (let i = 2; i < 10; i++){
-if (i % 2 === 0)
-    console. log (i)
-}
-
-
-
- for (let i = 2; i <= 16; i++) {
-     if (i % 2 === 0) {
-         continue;
-     } else {
-         console.log(i);
-     }
- }
-
-let num = 2;
-
-while (num <= 16) {
-    if (num % 2 !== 0) {
-        console.log(num);
-    }
-    num++;
-}
+// for (let i = 2; i < 10; i++){
+// if (i % 2 === 0)
+//     console. log (i)
+// }
 
 
 
+//  for (let i = 2; i <= 16; i++) {
+//      if (i % 2 === 0) {
+//          continue;
+//      } else {
+//          console.log(i);
+//      }
+//  }
 
-    for (let i = 0; i < arr.length; i++) {
-        result[i] = arr[i];
-    }
+// let num = 2;
 
-    console.log(result);
-    return result;
-}
+// while (num <= 16) {
+//     if (num % 2 !== 0) {
+//         console.log(num);
+//     }
+//     num++;
+// }
 
 
 
+
+//     for (let i = 0; i < arr.length; i++) {
+//         result[i] = arr[i];
+//     }
+
+//     console.log(result);
+//     return result;
+// }
+
+// const lines = 5;
+// let result = '';
+
+// for (let i = 0; i <= lines; i++) {
+//     for (let j = 0; j < lines - i; j++) {
+//         result += " ";
+//     }
+//     for (let j = 0; j < 2 * i + 1; j++) {
+//         result += "*";
+//     }
+//     result += "\n";
+// }
+
+// console.log(result)
+
+const numberOfFilms = +prompt("Сколько фильмов уже посмотрели?", "");
+
+const personalMovieDB = {
+    count: numberOfFilms,
+    movies: {},
+    actors: {},
+    genres: [],
+    privat: false
+};
+
+const a = prompt("Один из последних просмотренных фильмов?", "");
+const b = prompt("На сколько оцените его?", "");
+
+const c = prompt("Один из последних просмотренных фильмов?", "");
+const d = prompt("На сколько оцените его?", "");
+
+personalMovieDB.movies[a] = b;
+personalMovieDB.movies[c] = d;
+
+console.log(personalMovieDB);
+if (1) {
+    console.log("ok!");
+} else {
+    console.log("error")
+};
