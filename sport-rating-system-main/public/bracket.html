@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Турнирная сетка - Ortus Judo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="variables.css">
+    <link rel="stylesheet" href="bracket.css">
+</head>
+
+<body class="modern-theme">
+    <div class="mesh-background"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-brand" style="text-decoration: none;">ORTUS <span>JUDO</span></a>
+            <div class="nav-links">
+                <span class="nav-badge" id="competition-badge">TOURNAMENT</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bracket-wrapper">
+        <div class="container">
+            <!-- Header Section -->
+            <div class="bracket-header fade-in-up">
+                <div class="header-content">
+                    <h1 id="comp-title">Загрузка...</h1>
+                    <div class="comp-meta">
+                        <span id="comp-date">...</span>
+                        <span class="divider">•</span>
+                        <span id="comp-location">...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Selector -->
+            <div class="category-scroll-wrapper fade-in-up" style="animation-delay: 0.1s;">
+                <div class="category-tabs" id="category-tabs">
+                    <!-- Categories injected here -->
+                    <div class="loading-pill"></div>
+                    <div class="loading-pill"></div>
+                    <div class="loading-pill"></div>
+                </div>
+            </div>
+
+            <!-- Main Bracket View -->
+            <div class="bracket-canvas fade-in-up" style="animation-delay: 0.2s;">
+                <div class="bracket-container" id="bracket-container">
+                    <div class="empty-state">
+                        <div class="empty-icon">📊</div>
+                        <h3>Выберите категорию</h3>
+                        <p>Нажмите на весовую категорию выше, чтобы увидеть сетку</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="page-loader" id="page-loading">
+        <div class="loader-content">
+            <div class="loader-circle"></div>
+            <p>Загрузка турнира...</p>
+        </div>
+    </div>
+
+    <div class="error-modal" id="error-state" style="display:none;">
+        <div class="error-content">
+            <h1>404</h1>
+            <p>Турнир не найден или сетка еще не сформирована.</p>
+            <a href="index.html" class="btn-back">На главную</a>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div class="bracket-modal-overlay" id="result-modal" style="display:none;" onclick="if(event.target===this)closeResultModal()">
+        <div class="bracket-modal">
+            <h3>Записать результат</h3>
+            <div id="result-match-info" style="margin-bottom:1rem;"></div>
+            <form id="result-form" onsubmit="submitMatchResult(event)">
+                <input type="hidden" id="result-match-id">
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block;margin-bottom:0.3rem;font-weight:600;">Победитель</label>
+                    <select id="result-winner" required style="width:100%;padding:0.5rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-primary);">
+                        <option value="">Выберите</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block;margin-bottom:0.3rem;font-weight:600;">Тип результата</label>
+                    <select id="result-type" required style="width:100%;padding:0.5rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-primary);">
+                        <option value="ippon">Иппон</option>
+                        <option value="wazari">Ваза-ари</option>
+                        <option value="points">По баллам</option>
+                        <option value="disqualification">Дисквалификация</option>
+                    </select>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;">
+                    <div>
+                        <label style="display:block;margin-bottom:0.3rem;font-weight:600;">Очки 1</label>
+                        <input type="number" id="result-score1" value="0" min="0" style="width:100%;padding:0.5rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-primary);">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:0.3rem;font-weight:600;">Очки 2</label>
+                        <input type="number" id="result-score2" value="0" min="0" style="width:100%;padding:0.5rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-primary);">
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+                    <button type="button" onclick="closeResultModal()" style="padding:0.5rem 1rem;border-radius:8px;border:1px solid var(--border-color);background:transparent;color:var(--text-primary);cursor:pointer;">Отмена</button>
+                    <button type="submit" style="padding:0.5rem 1rem;border-radius:8px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-weight:600;">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="bracket.js"></script>
+</body>
+
+</html>

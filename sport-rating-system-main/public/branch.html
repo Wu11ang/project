@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ortus Judo - Филиал</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="variables.css">
+    <link rel="stylesheet" href="branch.css">
+</head>
+
+<body class="modern-theme">
+    <div class="mesh-background"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-brand" style="text-decoration: none;">ORTUS <span>JUDO</span></a>
+            <div class="nav-links">
+                <a href="leaderboard.html" class="nav-link">Лидеры</a>
+                <a href="login.html" class="nav-link">Вход</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="elite-wrapper">
+        <div class="container">
+            <div class="elite-layout">
+                <!-- Sidebar Info -->
+                <aside class="elite-sidebar">
+                    <div class="branch-card-premium">
+                        <div class="hero-badge-wrapper">
+                            <span class="hero-badge">OFFICIAL BRANCH</span>
+                        </div>
+                        <h1 class="branch-title-premium" id="branch-name">Загрузка...</h1>
+                        <div class="branch-meta-premium">
+                            <p id="branch-location">...</p>
+                            <p id="branch-address">...</p>
+                        </div>
+
+                        <div class="stats-stack">
+                            <div class="stack-item highlight">
+                                <span class="label">Рейтинг Филиала</span>
+                                <span class="value" id="stat-score">0</span>
+                            </div>
+                            <div class="stack-item">
+                                <span class="label">Всего Учеников</span>
+                                <div class="stack-row">
+                                    <span class="icon">👥</span>
+                                    <span class="value" id="stat-athletes">0</span>
+                                </div>
+                            </div>
+                            <div class="stack-item">
+                                <span class="label">Мастеров</span>
+                                <div class="stack-row">
+                                    <span class="icon">🏅</span>
+                                    <span class="value" id="stat-coaches">0</span>
+                                </div>
+                            </div>
+                            <div class="stack-item">
+                                <span class="label">Побед</span>
+                                <div class="stack-row">
+                                    <span class="icon">🏆</span>
+                                    <span class="value" id="stat-wins">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="elite-content">
+                    <!-- Analytics Section -->
+                    <div class="content-block animate-fadeInUp" id="block-analytics">
+                        <h2 class="block-title">Эффективность команды</h2>
+                        <div class="analytics-grid">
+                            <div class="analytics-card">
+                                <div class="card-head">
+                                    <span class="label">Командный зачёт</span>
+                                    <span class="val" id="val-points">0</span>
+                                </div>
+                                <div class="card-bar">
+                                    <div class="bar-f" id="bar-points"></div>
+                                </div>
+                            </div>
+                            <div class="analytics-card">
+                                <div class="card-head">
+                                    <span class="label">Средний КПД</span>
+                                    <span class="val" id="val-avg">0</span>
+                                </div>
+                                <div class="card-bar">
+                                    <div class="bar-f" id="bar-avg"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coaches Section -->
+                    <div class="content-block animate-fadeInUp" id="block-coaches" style="animation-delay: 0.1s;">
+                        <div class="block-header">
+                            <h2 class="block-title">Наши тренеры</h2>
+                            <span class="badge-count" id="coach-count-badge">0</span>
+                        </div>
+                        <div class="coaches-grid-elite" id="coaches-grid"></div>
+                    </div>
+
+                    <!-- Athletes Section -->
+                    <div class="content-block animate-fadeInUp" id="block-athletes" style="animation-delay: 0.2s;">
+                        <div class="block-header">
+                            <h2 class="block-title">Топ спортсменов</h2>
+                        </div>
+                        <div class="athletes-list-elite" id="athletes-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Coach Panel -->
+    <div class="coach-panel" id="coach-panel" style="display:none;">
+        <div class="panel-overlay" onclick="closeCoachPanel()"></div>
+        <div class="panel-content">
+            <button class="panel-close" onclick="closeCoachPanel()">&times;</button>
+            <div class="panel-header" id="panel-header"></div>
+            <div class="panel-athletes" id="panel-athletes"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 ORTUS JUDO. Платформа аналитики спортивных достижений.</p>
+        </div>
+    </footer>
+
+    <!-- Transitions -->
+    <div class="page-loader" id="page-loading">
+        <div class="loader-content">
+            <div class="loader-circle"></div>
+            <p>Синхронизация данных...</p>
+        </div>
+    </div>
+
+    <div class="error-modal" id="error-state" style="display:none;">
+        <div class="error-content">
+            <h1>404</h1>
+            <p>Филиал не найден или временно недоступен.</p>
+            <a href="index.html" class="btn-back">Вернуться назад</a>
+        </div>
+    </div>
+
+    <script src="branch.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель тренера - Рейтинговая система</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="variables.css">
+    <link rel="stylesheet" href="styles.css?v=1.1">
+</head>
+
+<body class="modern-theme">
+    <div class="mesh-background"></div>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">ORTUS <span>COACH</span></div>
+            <button class="nav-toggle" aria-label="Меню">&#9776;</button>
+            <ul class="nav-menu">
+                <li><a href="#" data-page="dashboard" class="nav-link active">Дашборд</a></li>
+                <li><a href="#" data-page="my-athletes" class="nav-link">Мои спортсмены</a></li>
+                <li><a href="#" data-page="pending" class="nav-link">
+                        Заявки <span id="pending-count" class="badge">0</span>
+                    </a></li>
+                <li><a href="#" data-page="competitions" class="nav-link">Соревнования</a></li>
+                <li><a href="#" data-page="schedule" class="nav-link">Расписание</a></li>
+                <li><a href="#" data-page="branch-athletes" class="nav-link">Филиал</a></li>
+                <li><a href="#" data-page="ratings" class="nav-link">Рейтинг</a></li>
+                <li><a href="#" data-page="ai" class="nav-link ai-nav-link">🤖 AI Ассистент</a></li>
+                <li><a href="leaderboard.html" target="_blank" class="nav-link">Экран</a></li>
+            </ul>
+            <div class="nav-user">
+                <div class="nav-actions" style="display: flex; align-items: center; gap: 1rem; margin-right: 1.5rem;">
+                    <div class="notification-bell" onclick="toggleNotifications()">
+                        <span class="bell-icon">🔔</span>
+                        <span class="notification-badge" id="notification-badge" style="display: none;">0</span>
+                    </div>
+                    <!-- Notification Dropdown -->
+                    <div class="notification-dropdown" id="notification-dropdown">
+                        <div class="notification-dropdown-header">
+                            <h3>Уведомления</h3>
+                            <button onclick="markAllAsRead()" class="mark-read-btn">Прочитать все</button>
+                        </div>
+                        <div class="notification-dropdown-body" id="notification-dropdown-body">
+                            <p class="text-center">Загрузка...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-profile-trigger" id="user-menu-trigger">
+                    <div class="user-avatar-container">
+                        <img id="nav-user-photo" src="" alt="" style="display: none;">
+                        <span class="user-avatar-placeholder">👤</span>
+                    </div>
+                    <div class="user-info-brief">
+                        <span id="user-name" class="user-name-text">Загрузка...</span>
+                        <span id="nav-user-role" class="user-role-text">Тренер</span>
+                    </div>
+                    <span style="font-size: 0.6rem; opacity: 0.5;">▼</span>
+                </div>
+
+                <div class="user-dropdown-menu" id="user-dropdown">
+                    <div class="dropdown-header">
+                        <span id="dropdown-full-name" class="full-name">-</span>
+                        <span class="role-label">Личный кабинет</span>
+                    </div>
+                    <button class="dropdown-item" onclick="showPage('profile'); closeUserMenu()">
+                        <span>👤</span> Мой профиль
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item danger" onclick="logout()">
+                        <span>🚪</span> Выйти
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-content">
+        <!-- Dashboard Summary -->
+        <div id="dashboard-page" class="page active">
+            <div class="page-header">
+                <h1>Обзор системы</h1>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card primary">
+                    <span class="label">Мои спортсмены</span>
+                    <span class="value" id="stats-my-athletes">-</span>
+                </div>
+                <div class="stat-card warning">
+                    <span class="label">Новые заявки</span>
+                    <span class="value" id="stats-pending">-</span>
+                </div>
+                <div class="stat-card success">
+                    <span class="label">Всего очков</span>
+                    <span class="value" id="stats-total-points">-</span>
+                </div>
+            </div>
+
+            <div class="dashboard-grid" style="margin-top: 2rem;">
+                <div class="dashboard-column">
+                    <div class="section-title">Ближайшие турниры</div>
+                    <div class="card" id="upcoming-competitions-widget">
+                        <p class="text-center">Загрузка...</p>
+                    </div>
+                </div>
+                <div class="dashboard-column">
+                    <div class="section-title">Топ моих учеников</div>
+                    <div class="card" id="top-students-widget">
+                        <p class="text-center">Загрузка...</p>
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <div class="section-title">Лента событий</div>
+                        <div class="card" id="activity-feed-widget" style="max-height: 300px; overflow-y: auto;">
+                            <p class="text-center">Загрузка...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Athletes Page -->
+        <div id="my-athletes-page" class="page">
+            <div class="page-header">
+                <h1>Мои спортсмены</h1>
+            </div>
+            <div class="card">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ФИО</th>
+                            <th>Пол</th>
+                            <th>Вес</th>
+                            <th>Рост</th>
+                            <th>Категория</th>
+                            <th>Пояс</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="athletes-tbody">
+                        <tr>
+                            <td colspan="7" class="text-center">Загрузка...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pending Approvals Page -->
+        <div id="pending-page" class="page">
+            <div class="page-header">
+                <h1>Заявки на подтверждение</h1>
+            </div>
+            <div id="pending-list">
+                <p class="text-center">Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- Competitions Page -->
+        <div id="competitions-page" class="page">
+            <div class="page-header">
+                <h1>Соревнования</h1>
+                <button class="btn btn-primary" onclick="showCompetitionModal()">+ Создать соревнование</button>
+            </div>
+            <div id="competitions-list" class="competitions-grid">
+                <p class="text-center">Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- Competition Detail Page (Wizard) -->
+        <div id="competition-detail-page" class="page">
+            <div class="page-header">
+                <button class="btn btn-secondary" onclick="showPage('competitions')">← Назад</button>
+                <h1 id="competition-title">Соревнование</h1>
+            </div>
+
+            <!-- Stepper -->
+            <div class="wizard-stepper">
+                <div class="wizard-step active" data-step="1" onclick="goToWizardStep(1)">
+                    <div class="wizard-step-num">1</div>
+                    <div class="wizard-step-label">Информация</div>
+                </div>
+                <div class="wizard-step-line"></div>
+                <div class="wizard-step" data-step="2" onclick="goToWizardStep(2)">
+                    <div class="wizard-step-num">2</div>
+                    <div class="wizard-step-label">Категории</div>
+                </div>
+                <div class="wizard-step-line"></div>
+                <div class="wizard-step" data-step="3" onclick="goToWizardStep(3)">
+                    <div class="wizard-step-num">3</div>
+                    <div class="wizard-step-label">Регистрация</div>
+                </div>
+                <div class="wizard-step-line"></div>
+                <div class="wizard-step" data-step="4" onclick="goToWizardStep(4)">
+                    <div class="wizard-step-num">4</div>
+                    <div class="wizard-step-label">Сетка</div>
+                </div>
+                <div class="wizard-step-line"></div>
+                <div class="wizard-step" data-step="5" onclick="goToWizardStep(5)">
+                    <div class="wizard-step-num">5</div>
+                    <div class="wizard-step-label">Матчи</div>
+                </div>
+                <div class="wizard-step-line"></div>
+                <div class="wizard-step" data-step="6" onclick="goToWizardStep(6)">
+                    <div class="wizard-step-num">6</div>
+                    <div class="wizard-step-label">Итоги</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Info -->
+            <div class="wizard-panel" id="wizard-step-1">
+                <div class="card">
+                    <h2>Информация о соревновании</h2>
+                    <div id="competition-info"></div>
+                </div>
+                <div class="wizard-nav">
+                    <span></span>
+                    <button class="btn btn-primary" onclick="goToWizardStep(2)">Далее →</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Categories -->
+            <div class="wizard-panel" id="wizard-step-2" style="display:none;">
+                <div class="card">
+                    <h2>Весовые категории</h2>
+                    <div id="competition-categories-list"></div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem; align-items: center; flex-wrap: wrap;">
+                        <select id="add-cat-weight" class="select" style="flex: 2; min-width: 120px;">
+                            <option value="">Категория</option>
+                            <option value="50 кг">50 кг</option>
+                            <option value="55 кг">55 кг</option>
+                            <option value="60 кг">60 кг</option>
+                            <option value="66 кг">66 кг</option>
+                            <option value="73 кг">73 кг</option>
+                            <option value="81 кг">81 кг</option>
+                            <option value="90 кг">90 кг</option>
+                            <option value="100 кг">100 кг</option>
+                            <option value="+100 кг">+100 кг</option>
+                            <option value="40 кг">40 кг</option>
+                            <option value="44 кг">44 кг</option>
+                            <option value="48 кг">48 кг</option>
+                            <option value="52 кг">52 кг</option>
+                            <option value="57 кг">57 кг</option>
+                            <option value="63 кг">63 кг</option>
+                            <option value="70 кг">70 кг</option>
+                            <option value="78 кг">78 кг</option>
+                            <option value="+78 кг">+78 кг</option>
+                        </select>
+                        <select id="add-cat-gender" class="select" style="flex: 1; min-width: 80px;">
+                            <option value="M">М</option>
+                            <option value="F">Ж</option>
+                        </select>
+                        <button class="btn btn-primary btn-sm" onclick="addCategoryToCompetition()">Добавить</button>
+                    </div>
+                </div>
+                <div class="wizard-nav">
+                    <button class="btn btn-secondary" onclick="goToWizardStep(1)">← Назад</button>
+                    <button class="btn btn-primary" onclick="goToWizardStep(3)">Далее →</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Registration -->
+            <div class="wizard-panel" id="wizard-step-3" style="display:none;">
+                <div class="card">
+                    <h2>Регистрация спортсменов</h2>
+                    <button class="btn btn-primary btn-sm" onclick="showRegisterAthleteModal()" style="margin-bottom: 1rem;">+ Зарегистрировать спортсмена</button>
+                    <div id="registrations-list"></div>
+                </div>
+                <div class="wizard-nav">
+                    <button class="btn btn-secondary" onclick="goToWizardStep(2)">← Назад</button>
+                    <button class="btn btn-primary" onclick="goToWizardStep(4)">Далее →</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Bracket Generation -->
+            <div class="wizard-panel" id="wizard-step-4" style="display:none;">
+                <div class="card">
+                    <h2>Турнирная сетка</h2>
+                    <div id="bracket-step-content">
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">Когда все спортсмены зарегистрированы, сгенерируйте турнирную сетку.</p>
+                        <button class="btn btn-success" onclick="generateBracket()">Генерировать сетку</button>
+                        <a id="view-bracket-link" href="#" target="_blank" class="btn btn-secondary" style="display:none; margin-left: 0.5rem;">Открыть сетку</a>
+                    </div>
+                </div>
+                <div class="wizard-nav">
+                    <button class="btn btn-secondary" onclick="goToWizardStep(3)">← Назад</button>
+                    <button class="btn btn-primary" onclick="goToWizardStep(5)">Далее →</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Matches / Sparrings -->
+            <div class="wizard-panel" id="wizard-step-5" style="display:none;">
+                <div class="card">
+                    <h2>Спарринги и бои</h2>
+                    <button class="btn btn-primary btn-sm" onclick="showSparringModal()" style="margin-bottom: 1rem;">+ Создать спарринг</button>
+                    <div id="sparrings-list"></div>
+                </div>
+                <div class="wizard-nav">
+                    <button class="btn btn-secondary" onclick="goToWizardStep(4)">← Назад</button>
+                    <button class="btn btn-primary" onclick="goToWizardStep(6)">Далее →</button>
+                </div>
+            </div>
+
+            <!-- Step 6: Results -->
+            <div class="wizard-panel" id="wizard-step-6" style="display:none;">
+                <div class="card">
+                    <h2>Итоги соревнования</h2>
+                    <div id="competition-results"></div>
+                </div>
+                <div class="wizard-nav">
+                    <button class="btn btn-secondary" onclick="goToWizardStep(5)">← Назад</button>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Page -->
+        <div id="schedule-page" class="page">
+            <div class="page-header">
+                <h1>Расписание тренировок</h1>
+                <button class="btn btn-primary" onclick="showScheduleModal()">+ Добавить занятие</button>
+            </div>
+            <div class="card">
+                <h2>Моё расписание</h2>
+                <div id="schedule-list">
+                    <p class="text-center">Загрузка...</p>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Записи на тренировки</h2>
+                <div id="bookings-list">
+                    <p class="text-center">Загрузка...</p>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Подписки спортсменов</h2>
+                <button class="btn btn-primary btn-sm" onclick="showSubscriptionModal()" style="margin-bottom:1rem;">+
+                    Создать подписку</button>
+                <div id="subscriptions-list">
+                    <p class="text-center">Загрузка...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Branch Athletes Page -->
+        <div id="branch-athletes-page" class="page">
+            <div class="page-header">
+                <h1>Спортсмены филиала</h1>
+                <button onclick="openBranchPage()" class="btn btn-primary">Страница филиала</button>
+            </div>
+            <div class="card">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ФИО</th>
+                            <th>Тренер</th>
+                            <th>Пол</th>
+                            <th>Вес</th>
+                            <th>Категория</th>
+                            <th>Пояс</th>
+                        </tr>
+                    </thead>
+                    <tbody id="branch-athletes-tbody">
+                        <tr>
+                            <td colspan="6" class="text-center">Загрузка...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- AI Assistant Page -->
+        <div id="ai-page" class="page">
+            <div class="page-header">
+                <h1>AI Ассистент <span class="badge badge-ai">Beta</span></h1>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-column">
+                    <div class="ai-hero-card">
+                        <div class="ai-orb"></div>
+                        <h2>Интеллектуальный анализ</h2>
+                        <p>Нажмите для получения глубокого аудита результатов ваших учеников на основе последних данных.
+                        </p>
+                        <button class="btn btn-primary btn-ai" onclick="generateAIAnalysis()">Провести аудит
+                            филиала</button>
+                    </div>
+
+                    <div id="ai-insights-container" style="margin-top: 1.5rem;">
+                        <!-- Insights will be injected here -->
+                    </div>
+                </div>
+
+                <div class="dashboard-column">
+                    <div class="card ai-chat-card">
+                        <div class="card-header">
+                            <h3>Консультация эксперта</h3>
+                        </div>
+                        <div id="ai-chat-messages" class="ai-chat-messages">
+                            <div class="ai-msg bot">Привет! Я ваш спортивный ассистент. О чем вы хотите узнать сегодня?
+                            </div>
+                        </div>
+                        <div class="ai-chat-input-area">
+                            <input type="text" id="ai-chat-input" placeholder="Задайте вопрос о технике, подготовке..."
+                                onkeypress="if(event.key==='Enter') sendAIChat()">
+                            <button class="btn btn-primary btn-circle" onclick="sendAIChat()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ratings Page -->
+        <div id="ratings-page" class="page">
+            <div class="page-header">
+                <h1>Рейтинг</h1>
+                <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+                    <select id="ratings-season-selector" class="season-select" onchange="onRatingsSeasonChange()">
+                        <option value="">Загрузка...</option>
+                    </select>
+                    <label style="cursor:pointer;display:inline-flex;align-items:center;gap:0.4rem;font-weight:600;font-size:0.85rem;">
+                        <input type="checkbox" id="ratings-only-mine" onchange="onRatingsFilterChange()"> Только мои
+                    </label>
+                </div>
+            </div>
+            <div class="card">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Место</th>
+                            <th>Спортсмен</th>
+                            <th>Пояс</th>
+                            <th>Очки</th>
+                            <th>W/L</th>
+                            <th>Боёв</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ratings-tbody">
+                        <tr>
+                            <td colspan="6" class="text-center">Загрузка...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile-page" class="page">
+            <div class="page-header">
+                <h1>Личный кабинет</h1>
+            </div>
+
+            <div class="profile-container">
+                <div class="profile-sidebar">
+                    <div class="profile-section-card" style="text-align: center;">
+                        <div class="profile-photo-section">
+                            <img id="profile-photo-display" src="/placeholder-avatar.png" alt="Профиль">
+                            <label for="profile-photo-input" class="photo-upload-overlay">
+                                📷
+                                <input type="file" id="profile-photo-input" hidden accept="image/*">
+                            </label>
+                        </div>
+                        <h2 id="profile-full-name" style="margin-bottom: 0.5rem;">-</h2>
+                        <p id="profile-role-tag" class="hero-meta">-</p>
+                    </div>
+                </div>
+
+                <div class="profile-main">
+                    <div class="profile-section-card">
+                        <h2 class="profile-section-title">📝 Личная информация</h2>
+                        <form id="profile-info-form">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                <div class="profile-form-group">
+                                    <label>Имя</label>
+                                    <input type="text" id="profile-first-name" class="profile-input" required>
+                                </div>
+                                <div class="profile-form-group">
+                                    <label>Фамилия</label>
+                                    <input type="text" id="profile-last-name" class="profile-input" required>
+                                </div>
+                            </div>
+                            <div class="profile-form-group">
+                                <label>Телефон</label>
+                                <input type="tel" id="profile-phone" class="profile-input" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Сохранить
+                                изменения</button>
+                        </form>
+                    </div>
+
+                    <div class="profile-section-card">
+                        <h2 class="profile-section-title">🔒 Безопасность</h2>
+                        <form id="profile-password-form">
+                            <div class="profile-form-group">
+                                <label>Текущий пароль</label>
+                                <input type="password" id="profile-current-password" class="profile-input" required>
+                            </div>
+                            <div class="profile-form-group">
+                                <label>Новый пароль</label>
+                                <input type="password" id="profile-new-password" class="profile-input" required
+                                    minlength="6">
+                            </div>
+                            <div class="profile-form-group">
+                                <label>Подтвердите новый пароль</label>
+                                <input type="password" id="profile-confirm-password" class="profile-input" required
+                                    minlength="6">
+                            </div>
+                            <button type="submit" class="btn btn-secondary" style="width: 100%;">Изменить
+                                пароль</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Athlete Modal -->
+        <div id="edit-athlete-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Редактировать спортсмена</h2>
+                    <span class="close" onclick="closeModal('edit-athlete-modal')">&times;</span>
+                </div>
+                <form id="edit-athlete-form" class="modal-body">
+                    <input type="hidden" id="edit-athlete-id">
+                    <div class="form-group">
+                        <label>Вес (кг)</label>
+                        <input type="number" step="0.1" id="edit-weight" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Рост (см)</label>
+                        <input type="number" id="edit-height" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Пояс</label>
+                        <select id="edit-belt" class="select" required>
+                            <option value="белый">Белый</option>
+                            <option value="жёлтый">Жёлтый</option>
+                            <option value="оранжевый">Оранжевый</option>
+                            <option value="зелёный">Зелёный</option>
+                            <option value="синий">Синий</option>
+                            <option value="коричневый">Коричневый</option>
+                            <option value="чёрный">Чёрный</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeModal('edit-athlete-modal')">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Competition Modal -->
+        <div id="competition-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Создать соревнование</h2>
+                    <span class="close" onclick="closeModal('competition-modal')">&times;</span>
+                </div>
+                <form id="competition-form" class="modal-body">
+                    <div class="form-group">
+                        <label>Название</label>
+                        <input type="text" name="name" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата</label>
+                        <input type="date" name="competition_date" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Место</label>
+                        <input type="text" name="location" class="input">
+                    </div>
+                    <div class="form-group">
+                        <label>Уровень</label>
+                        <select name="level" class="select" required>
+                            <option value="club">Клубное</option>
+                            <option value="city">Городское</option>
+                            <option value="regional">Региональное</option>
+                            <option value="national">Национальное</option>
+                            <option value="international">Международное</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Сезон</label>
+                        <select name="season_id" id="comp-season-select" class="select"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Описание</label>
+                        <textarea name="description" class="input" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Весовые категории</label>
+                        <div id="comp-categories-list"></div>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="addCategoryRow()"
+                            style="margin-top: 0.5rem;">+ Добавить категорию</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeModal('competition-modal')">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Создать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Register Athlete Modal -->
+        <div id="register-athlete-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Зарегистрировать спортсмена</h2>
+                    <span class="close" onclick="closeModal('register-athlete-modal')">&times;</span>
+                </div>
+                <form id="register-athlete-form" class="modal-body">
+                    <div class="form-group">
+                        <label>Спортсмен</label>
+                        <select id="reg-athlete-select" class="select" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Весовая категория</label>
+                        <select id="reg-category-select" class="select" required></select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeModal('register-athlete-modal')">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Зарегистрировать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sparring Modal -->
+        <div id="sparring-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Создать спарринг</h2>
+                    <span class="close" onclick="closeModal('sparring-modal')">&times;</span>
+                </div>
+                <form id="sparring-form" class="modal-body">
+                    <div class="form-group">
+                        <label>Весовая категория</label>
+                        <select id="spar-category-select" class="select" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Спортсмен 1</label>
+                        <select id="spar-athlete1-select" class="select" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Спортсмен 2</label>
+                        <select id="spar-athlete2-select" class="select" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Раунд (опционально)</label>
+                        <input type="text" id="spar-round" class="input" placeholder="Четвертьфинал, Полуфинал...">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeModal('sparring-modal')">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Создать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Fight Result Modal -->
+        <div id="fight-modal" class="modal">
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h2>Добавить результат боя</h2>
+                    <span class="close" onclick="closeModal('fight-modal')">&times;</span>
+                </div>
+                <form id="fight-form" class="modal-body">
+                    <input type="hidden" id="fight-sparring-id">
+                    <div id="fight-athletes-info" style="margin-bottom: 1rem;"></div>
+
+                    <div class="form-group">
+                        <label>Победитель</label>
+                        <select id="fight-winner-select" class="select" required></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Тип результата</label>
+                        <select id="fight-result-type" class="select" required onchange="onResultTypeChange()">
+                            <option value="ippon">Иппон (10 баллов)</option>
+                            <option value="wazari">Ваза-ари (7 баллов)</option>
+                            <option value="yuko">Юко (5 баллов)</option>
+                            <option value="shido">Шидо (3 балла — штраф сопернику)</option>
+                            <option value="points">По баллам</option>
+                            <option value="disqualification">Дисквалификация</option>
+                        </select>
+                    </div>
+
+                    <div id="fight-auto-points-info"
+                        style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 0.75rem; margin-bottom: 1rem;">
+                        <strong>Иппон</strong> — автоматически <strong>10 баллов</strong> победителю
+                    </div>
+
+                    <div class="form-group">
+                        <label>Счёт спортсмена 1</label>
+                        <input type="number" id="fight-score1" class="input" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Счёт спортсмена 2</label>
+                        <input type="number" id="fight-score2" class="input" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Примечания</label>
+                        <textarea id="fight-notes" class="input" rows="2"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeModal('fight-modal')">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Сохранить результат</button>
+                    </div>
+                </form>
+
+                <!-- Score History -->
+                <div id="fight-score-history" style="padding: 0 1.5rem 1.5rem; display: none;">
+                    <h3 style="margin-bottom: 0.75rem;">История очков спарринга</h3>
+                    <div id="fight-score-history-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Modal -->
+        <div id="schedule-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Добавить занятие</h2>
+                    <span class="close" onclick="closeModal('schedule-modal')">&times;</span>
+                </div>
+                <form id="schedule-form" class="modal-body">
+                    <div class="form-group">
+                        <label>День недели</label>
+                        <select id="sched-day" class="select" required>
+                            <option value="0">Понедельник</option>
+                            <option value="1">Вторник</option>
+                            <option value="2">Среда</option>
+                            <option value="3">Четверг</option>
+                            <option value="4">Пятница</option>
+                            <option value="5">Суббота</option>
+                            <option value="6">Воскресенье</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Начало</label>
+                        <input type="time" id="sched-start" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Конец</label>
+                        <input type="time" id="sched-end" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Платная тренировка</label>
+                        <select id="sched-paid" class="select">
+                            <option value="0">Бесплатная</option>
+                            <option value="1">Платная</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Цена (тг)</label>
+                        <input type="number" id="sched-price" class="input" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Макс. участников</label>
+                        <input type="number" id="sched-max" class="input" value="20" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Описание</label>
+                        <textarea id="sched-desc" class="input" rows="2"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeModal('schedule-modal')">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Создать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Subscription Modal -->
+        <div id="subscription-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Создать подписку</h2>
+                    <span class="close" onclick="closeModal('subscription-modal')">&times;</span>
+                </div>
+                <form id="subscription-form" class="modal-body">
+                    <div class="form-group">
+                        <label>Спортсмен</label>
+                        <select id="sub-athlete" class="select" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Тип</label>
+                        <select id="sub-type" class="select" required>
+                            <option value="monthly">Месячная</option>
+                            <option value="quarterly">Квартальная</option>
+                            <option value="yearly">Годовая</option>
+                            <option value="per_session">По занятиям</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата начала</label>
+                        <input type="date" id="sub-start" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата окончания</label>
+                        <input type="date" id="sub-end" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Кол-во занятий (для типа "По занятиям")</label>
+                        <input type="number" id="sub-sessions" class="input" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Цена (тг)</label>
+                        <input type="number" id="sub-price" class="input" required min="0">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeModal('subscription-modal')">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Создать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script src="ui-utils.js"></script>
+        <script src="coach-dashboard.js"></script>
+        <script src="notifications.js"></script>
+</body>
+
+</html>

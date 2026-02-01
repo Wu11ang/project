@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ortus Judo - Таблица лидеров</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="variables.css">
+    <link rel="stylesheet" href="leaderboard.css">
+</head>
+
+<body class="modern-theme">
+    <div class="mesh-background"></div>
+    <div class="leaderboard-container">
+        <!-- Header -->
+        <header class="leaderboard-header">
+            <div class="club-info">
+                <div class="club-logo"><img src="logo.png" alt="Ortus Judo"
+                        style="width: 64px; height: 64px; object-fit: contain;"></div>
+                <div class="club-details">
+                    <h1 class="club-name">ORTUS JUDO</h1>
+                    <p class="club-location" id="branch-name">Астана</p>
+                </div>
+            </div>
+            <div class="category-display">
+                <div class="category-label">Весовая категория</div>
+                <div class="category-value" id="current-category">Все категории</div>
+                <div class="category-gender" id="current-gender"></div>
+            </div>
+            <div class="season-display">
+                <div class="season-label">Сезон</div>
+                <select id="season-selector" class="season-select" onchange="onSeasonChange()"></select>
+            </div>
+        </header>
+
+        <!-- View Tabs -->
+        <div class="leaderboard-tabs">
+            <button class="lb-tab active" onclick="switchLeaderboardTab('athletes')">Спортсмены</button>
+            <button class="lb-tab" onclick="switchLeaderboardTab('branches')">Филиалы</button>
+        </div>
+
+        <!-- Main Content: Athletes -->
+        <main class="leaderboard-main" id="athletes-view">
+            <!-- Top 3 Podium -->
+            <div class="podium" id="podium">
+                <!-- Will be populated by JS -->
+            </div>
+
+            <!-- Ranks 4-10 -->
+            <div class="rankings" id="rankings">
+                <!-- Will be populated by JS -->
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Загрузка рейтинга...</p>
+            </div>
+
+            <!-- Load More -->
+            <div id="load-more-container" style="display:none; text-align:center; padding: 1rem;">
+                <button class="control-btn" onclick="loadMoreRatings()" style="padding: 0.6rem 2rem; font-size: 0.9rem;">Показать ещё</button>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <p>Нет данных для отображения</p>
+            </div>
+        </main>
+
+        <!-- Main Content: Branches -->
+        <div class="leaderboard-main" id="branches-view" style="display:none;">
+            <div id="branch-rankings-list"></div>
+        </div>
+
+        <!-- Footer Controls -->
+        <footer class="leaderboard-footer">
+            <div class="auto-rotation-status">
+                <span id="rotation-status">Автосмена категорий: ВКЛ</span>
+            </div>
+            <div class="controls">
+                <button class="control-btn" onclick="toggleAutoRotation()">
+                    <span id="rotation-btn-text">⏸ Стоп</span>
+                </button>
+                <button class="control-btn" onclick="previousCategory()">◀ Пред</button>
+                <button class="control-btn" onclick="nextCategory()">След ▶</button>
+            </div>
+            <div class="last-update">
+                Обновлено: <span id="last-update">--:--</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="leaderboard.js"></script>
+</body>
+
+</html>

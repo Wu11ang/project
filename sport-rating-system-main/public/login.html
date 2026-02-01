@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - Рейтинговая система Ortus Judo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="variables.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+
+<body class="modern-theme">
+    <div class="mesh-background"></div>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo"><img src="logo.png" alt="Ortus Judo"
+                        style="width: 80px; height: 80px; object-fit: contain;"></div>
+                <h1>ORTUS JUDO</h1>
+                <p>Рейтинговая система</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active">
+                <h2>Вход в систему</h2>
+
+                <div class="form-group">
+                    <label>Номер телефона</label>
+                    <input type="tel" id="login-phone" placeholder="+77771234567" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="login-password" placeholder="••••••••" required>
+                        <button type="button" class="password-toggle"
+                            onclick="togglePassword('login-password', this)">&#128065;</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Войти</button>
+
+                <p class="switch-form">
+                    Нет аккаунта? <a href="#" onclick="showRegister(event)">Зарегистрироваться</a>
+                </p>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form">
+                <div class="registration-steps">
+                    <div class="reg-step active" data-step="1">1</div>
+                    <div class="reg-step-line"></div>
+                    <div class="reg-step" data-step="2">2</div>
+                    <div class="reg-step-line"></div>
+                    <div class="reg-step" data-step="3">3</div>
+                </div>
+
+                <h2>Регистрация</h2>
+
+                <!-- Step 1: Basic Info -->
+                <div class="form-step-container active" id="step-1">
+                    <div class="form-group">
+                        <label>Роль</label>
+                        <select id="register-role" onchange="toggleRoleFields()" required>
+                            <option value="">Выберите роль</option>
+                            <option value="athlete">Спортсмен</option>
+                            <option value="coach">Тренер</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Имя</label>
+                        <input type="text" id="register-first-name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Фамилия</label>
+                        <input type="text" id="register-last-name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Номер телефона</label>
+                        <input type="tel" id="register-phone" placeholder="+77771234567" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="register-password" placeholder="Минимум 6 символов" required>
+                            <button type="button" class="password-toggle"
+                                onclick="togglePassword('register-password', this)">&#128065;</button>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-primary" onclick="nextStep(1)">Далее</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Personal Details -->
+                <div class="form-step-container" id="step-2">
+                    <div class="form-group" id="discipline-field">
+                        <label>Вид единоборства</label>
+                        <select id="register-discipline">
+                            <option value="">Загрузка...</option>
+                        </select>
+                    </div>
+
+                    <div id="athlete-fields">
+                        <div class="form-group">
+                            <label>Дата рождения</label>
+                            <input type="date" id="register-birth-date">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Пол</label>
+                            <select id="register-gender" onchange="updateWeightCategory()">
+                                <option value="">Выберите</option>
+                                <option value="M">Мужской</option>
+                                <option value="F">Женский</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Рост (см)</label>
+                            <input type="number" id="register-height" placeholder="175">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Вес (кг)</label>
+                            <input type="number" step="0.1" id="register-weight" placeholder="65.5"
+                                oninput="updateWeightCategory()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Весовая категория</label>
+                            <input type="text" id="register-weight-category" readonly placeholder="Укажите пол и вес"
+                                style="opacity: 0.6; cursor: default;">
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">Назад</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(2)">Далее</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Branch & Coach -->
+                <div class="form-step-container" id="step-3">
+                    <div class="form-group" id="branch-field">
+                        <label>Филиал</label>
+                        <select id="register-branch">
+                            <option value="">Загрузка...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="coach-field">
+                        <label>Тренер</label>
+                        <select id="register-coach">
+                            <option value="">Сначала выберите филиал</option>
+                        </select>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(3)">Назад</button>
+                        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                    </div>
+                </div>
+
+                <p class="switch-form">
+                    Уже есть аккаунт? <a href="#" onclick="showLogin(event)">Войти</a>
+                </p>
+            </form>
+
+            <!-- Loading -->
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Загрузка...</p>
+            </div>
+
+            <!-- Error message -->
+            <div id="error-message" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="ui-utils.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = '&#128064;';
+            } else {
+                input.type = 'password';
+                btn.innerHTML = '&#128065;';
+            }
+        }
+    </script>
+</body>
+
+</html>

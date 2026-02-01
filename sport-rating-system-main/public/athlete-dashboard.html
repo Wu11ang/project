@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моя панель - Рейтинговая система</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="variables.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="modern-theme">
+    <div class="mesh-background"></div>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">ORTUS <span>ATHLETE</span></div>
+            <button class="nav-toggle" aria-label="Меню">&#9776;</button>
+            <ul class="nav-menu">
+                <li><a href="#" data-page="dashboard" class="nav-link active">Главная</a></li>
+                <li><a href="#" data-page="competitions" class="nav-link">Соревнования</a></li>
+                <li><a href="#" data-page="my-competitions" class="nav-link">Мои турниры</a></li>
+                <li><a href="#" data-page="fight-history" class="nav-link">Бои</a></li>
+                <li><a href="#" data-page="schedule" class="nav-link">Расписание</a></li>
+                <li><a href="leaderboard.html" target="_blank" class="nav-link">📺 Лидеры</a></li>
+            </ul>
+            <div class="nav-actions" style="display: flex; align-items: center; gap: 1rem; margin-right: 1.5rem;">
+                <div class="notification-bell" onclick="toggleNotifications()">
+                    <span class="bell-icon">🔔</span>
+                    <span class="notification-badge" id="notification-badge" style="display: none;">0</span>
+                </div>
+                <!-- Notification Dropdown -->
+                <div class="notification-dropdown" id="notification-dropdown">
+                    <div class="notification-dropdown-header">
+                        <h3>Уведомления</h3>
+                        <button onclick="markAllAsRead()" class="mark-read-btn">Прочитать все</button>
+                    </div>
+                    <div class="notification-dropdown-body" id="notification-dropdown-body">
+                        <p class="text-center">Загрузка...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-user">
+                <div class="user-profile-trigger" id="user-menu-trigger">
+                    <div class="user-avatar-container">
+                        <img id="nav-user-photo" src="" alt="" style="display: none;">
+                        <span class="user-avatar-placeholder">👤</span>
+                    </div>
+                    <div class="user-info-brief">
+                        <span id="user-name" class="user-name-text">Загрузка...</span>
+                        <span id="nav-user-role" class="user-role-text">Спортсмен</span>
+                    </div>
+                    <span style="font-size: 0.6rem; opacity: 0.5;">▼</span>
+                </div>
+
+                <div class="user-dropdown-menu" id="user-dropdown">
+                    <div class="dropdown-header">
+                        <span id="dropdown-full-name" class="full-name">-</span>
+                        <span class="role-label">Кабинет спортсмена</span>
+                    </div>
+                    <button class="dropdown-item" onclick="showPage('profile'); closeUserMenu()">
+                        <span>👤</span> Мой профиль
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item danger" onclick="logout()">
+                        <span>🚪</span> Выйти
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-content">
+
+        <!-- ========== DASHBOARD HOME ========== -->
+        <div id="dashboard-page" class="page active">
+            <div id="dashboard-summary" class="dashboard-hero">
+                <p class="text-center">Загрузка...</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card" id="dashboard-belt-progress">
+                    <h2>Прогресс пояса</h2>
+                    <div id="belt-progress-content">
+                        <p>Загрузка...</p>
+                    </div>
+                </div>
+                <div class="card" id="dashboard-fight-stats">
+                    <h2>Статистика боёв</h2>
+                    <div id="fight-stats-content">
+                        <p>Загрузка...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Мои достижения</h2>
+                <div id="achievements-content">
+                    <p class="text-center">Загрузка...</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Лента активности</h2>
+                <div id="activity-feed">
+                    <p class="text-center">Загрузка...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PROFILE ========== -->
+        <div id="profile-page" class="page">
+            <div class="page-header">
+                <h1>Мой профиль</h1>
+            </div>
+            <div class="card" id="profile-card">
+                <p class="text-center">Загрузка...</p>
+            </div>
+            <div class="card">
+                <h2>История рейтинга</h2>
+                <table class="table" id="rating-history-table">
+                    <thead>
+                        <tr>
+                            <th>Сезон</th>
+                            <th>Очки</th>
+                            <th>Боёв</th>
+                            <th>Побед</th>
+                            <th>Иппон</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rating-history-tbody">
+                        <tr>
+                            <td colspan="5" class="text-center">Загрузка...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== AVAILABLE COMPETITIONS ========== -->
+        <div id="competitions-page" class="page">
+            <div class="page-header">
+                <h1>Доступные соревнования</h1>
+            </div>
+            <div id="competitions-list" class="competitions-grid">
+                <p class="text-center">Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- ========== MY COMPETITIONS (Timeline) ========== -->
+        <div id="my-competitions-page" class="page">
+            <div class="page-header">
+                <h1>Мои турниры</h1>
+            </div>
+            <div id="my-competitions-list">
+                <p class="text-center">Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- ========== COMPETITION DETAIL ========== -->
+        <div id="competition-detail-page" class="page">
+            <div class="page-header">
+                <button class="btn btn-secondary" onclick="showPage('competitions')">← Назад</button>
+                <h1 id="comp-detail-title">Соревнование</h1>
+            </div>
+            <div class="card">
+                <div id="comp-detail-info"></div>
+            </div>
+            <div class="card">
+                <h2>Весовая категория</h2>
+                <div style="margin-bottom: 1rem;">
+                    <select id="comp-category-select" class="select" style="max-width: 350px;"
+                        onchange="onCategorySelect()">
+                        <option value="">Выберите категорию</option>
+                    </select>
+                </div>
+                <div id="comp-category-action"></div>
+            </div>
+            <div id="comp-bracket-container" class="card" style="display:none;">
+                <h2>Турнирная сетка</h2>
+                <div id="comp-bracket-view" class="bracket-scroll-container"></div>
+            </div>
+        </div>
+
+        <!-- ========== FIGHT HISTORY ========== -->
+        <div id="fight-history-page" class="page">
+            <div class="page-header">
+                <h1>История боёв</h1>
+            </div>
+            <div id="fight-history-list">
+                <p class="text-center">Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- ========== SCHEDULE ========== -->
+        <div id="schedule-page" class="page">
+            <div class="page-header">
+                <h1>Расписание тренировок</h1>
+            </div>
+            <div class="card">
+                <h2>Расписание моего тренера</h2>
+                <div id="coach-schedule-info"></div>
+                <div id="coach-schedule-list">
+                    <p class="text-center">Загрузка...</p>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Мои записи</h2>
+                <div id="my-bookings-list">
+                    <p class="text-center">Загрузка...</p>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Моя подписка</h2>
+                <div id="my-subscription-info">
+                    <p class="text-center">Загрузка...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coach Profile Modal -->
+    <div id="coach-profile-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Профиль тренера</h2>
+                <span class="close" onclick="closeModal('coach-profile-modal')">&times;</span>
+            </div>
+            <div class="modal-body" id="coach-profile-content">
+                <p>Загрузка...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Opponent Profile Modal -->
+    <div id="opponent-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Профиль спортсмена</h2>
+                <span class="close" onclick="closeModal('opponent-modal')">&times;</span>
+            </div>
+            <div class="modal-body" id="opponent-modal-content">
+                <p>Загрузка...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register for Competition Modal -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Регистрация на соревнование</h2>
+                <span class="close" onclick="closeModal('register-modal')">&times;</span>
+            </div>
+            <form id="register-form" class="modal-body">
+                <input type="hidden" id="reg-competition-id">
+                <div id="reg-comp-info"></div>
+                <div class="form-group">
+                    <label>Весовая категория</label>
+                    <select id="reg-category-select" class="select" required>
+                        <option value="">Выберите категорию</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('register-modal')">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="ui-utils.js"></script>
+    <script src="athlete-dashboard.js"></script>
+    <script src="notifications.js"></script>
+</body>
+
+</html>
